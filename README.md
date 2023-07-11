@@ -69,24 +69,24 @@ export default function App() {
 ```
 > app.template.tsx
 
-There is no special syntax to learn (Besides the <Template/>),  extracting the jsx to a .template should work the same way without exporting it.
+There is no special syntax to learn (Besides the ```<Template/>```),  extracting the JSX to a .template should work the same way as without exporting it.
 
 ## How it works
 
-During build all the ``` <Template url="..."/> ``` will be replaced by their content and will be inlined, And will be treated as a regular react component, that's why its possible to access the state regularly without any extra syntax or magic
+During build all the ``` <Template url="..."/> ``` will be replaced by their content and will be inlined, And will be treated as a regular react component, that's why it's possible to access the state regularly without any extra syntax or magic
 
 ## Editors / IDE's extension
-As expected, by extracting the markup and trying to access the data(variables,states,..etc) in the component intellisense and Typescript will scream at you, we know that it will work because in build it will be inlined and will have access to the data, but while developing that won't be possible..
+As expected, by extracting the markup and trying to access the data(variables, states,..etc) in the component intellisense and Typescript will scream at you, we know that it will work because in build it will be inlined and will have access to the data, but while developing that won't be possible..
 
 so we need to somehow tell the editor or ide that for this external template file there exists data in the corresponding component.
 
 And this is basically what [VSCODE extension here]() does, just install it and everything should work, make sure that the url is specified correctly in ```<Template dir=".."/>```
 
-The extension is heavily inspired from [ng-language-service](https://github.com/angular/vscode-ng-language-service)
+The extension is heavily inspired by [ng-language-service](https://github.com/angular/vscode-ng-language-service)
 
 ## Progress
 
-- [x] inline ```<Template dir="..." />``` with correspanding .template file at build
+- [x] inline ```<Template dir="..." />``` with corresponding .template file at build
 - [ ] vscode extension (WIP)
 - [ ] export as vite plugin
 

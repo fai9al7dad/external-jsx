@@ -1,6 +1,6 @@
 # React external JSX 
 
-this project is inspired by an angular external template, where allows you to separate your component logic from your markup
+this project is inspired by angular external templates, which allows you to separate your component's logic from your markup
 
 this is how you would do it in angular 
 

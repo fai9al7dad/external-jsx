@@ -69,6 +69,8 @@ export default function App() {
 ```
 > app.template.tsx
 
+which should allow separation, and might make development easier, by placing the markup and component code side by side you can avoid continues up and down scrolling 
+
 There is no special syntax to learn (Besides the ```<Template/>```),  extracting the JSX to a .template should work the same way as without exporting it.
 
 ## How it works

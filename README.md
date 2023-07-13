@@ -1,4 +1,4 @@
-# React external JSX 
+# external JSX 
 
 this project is inspired by angular external templates, which allows you to separate your component's logic from your markup
 
@@ -26,7 +26,8 @@ export class DemoComponent {}
 ```
 > demo.component.html
 
-this project follows a similar approach
+this project follows a similar approach 
+an example is shown below using react, but the project should work with any library/framework that uses JSX
 
 ```jsx
 import React from 'react';

@@ -5,8 +5,7 @@ import * as ts from "typescript";
 const componentFileExtension = ".tsx";
 const templateFileExtension = `.template.${componentFileExtension}`;
 
-// this function will return the jsx markup for a given template file path
-function parseTemplateFile(filePath: string): string | null {
+function parseImports(filePath: string): string[] {
   const fileContents = fs.readFileSync(filePath, "utf-8");
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -14,16 +13,25 @@ function parseTemplateFile(filePath: string): string | null {
     ts.ScriptTarget.Latest,
     true
   );
-
-  // TODO:: Allow imports in template files -> possibly by assuming that everything before the first root node is an import
-
-  return parseJsx(fileContents, sourceFile);
+  const imports: string[] = [];
+  function getImports(node: ts.Node): void {
+    if (ts.isImportDeclaration(node)) {
+      imports.push(fileContents.substring(node.pos, node.end));
+    }
+    ts.forEachChild(node, getImports);
+  }
+  getImports(sourceFile);
+  return imports;
 }
 
-function parseJsx(
-  fileContents: string,
-  sourceFile: ts.SourceFile
-): string | null {
+function parseJsx(filePath: string): string | null {
+  const fileContents = fs.readFileSync(filePath, "utf-8");
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    fileContents,
+    ts.ScriptTarget.Latest,
+    true
+  );
   // TODO:: throw error if more than one root node is found
 
   let jsxMarkup: string | null = null;
@@ -35,7 +43,9 @@ function parseJsx(
       ts.isJsxFragment(node)
     ) {
       // if found root then return and stop looping
-      jsxMarkup = fileContents.substring(node.pos, node.end);
+      jsxMarkup = fileContents
+        .substring(node.pos, node.end)
+        .replace(/^\s+/, "");
       return;
     }
     ts.forEachChild(node, getRootNode);
@@ -74,22 +84,21 @@ function parseDirectory(directoryPath: string): void {
             dirValue = dirValue.substring(1);
           }
           const templateFilePath = `${directoryPath}/${dirValue}`;
-          const jsxMarkup = parseTemplateFile(templateFilePath);
+          const jsxMarkup = parseJsx(templateFilePath);
+          const imports = parseImports(templateFilePath);
+
           if (jsxMarkup) {
             const componentCode = fileContents.replace(
               /<Template\s*dir\s*=\s*.*\s*\/>/,
               jsxMarkup
             );
             fs.writeFileSync(filePath, componentCode);
+
+            const importStatements = imports.join("\n");
+            fs.appendFileSync(filePath, `\n${importStatements}`);
           }
         }
       }
     }
   });
 }
-
-parseDirectory("./example/src");
-
-//         const componentCode = fs
-//             .readFileSync(componentFilePath, "utf-8")
-//             .replace(/<Template\s*dir\s*=\s*.*\s*\/>/, jsxMarkup);
